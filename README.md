@@ -1,7 +1,8 @@
 # SC2-Test-Document
 StarCraft II Map File Direct Executor
 
-data.ini:
+>data.ini
+
 DefaultMap = Local file to run (with no argument values)
 
 DisplayMode = Display Mode (0: Windowed, 1: Windowed (Fullscreen), 2: Fullscreen)
