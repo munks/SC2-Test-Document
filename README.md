@@ -56,3 +56,13 @@ Local Variable - lv_#Name#
 Global Variable - gv_#Name#
 
 Parameter - lp_#Name#
+
+### Sequence
+
+1. Find 'product.db' file from '%SystemDrive%\ProgramData\Battle.net\Agent'
+2. Save file string to variable
+3. Get StarCraft II installed folder from string
+4. Get Version and Processer from StarCraft II installed folder
+5. Create Command Line string, value from 'data.ini' file
+6. Run with ShellExecute Function
+7. Free memory
