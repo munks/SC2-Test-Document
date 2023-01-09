@@ -48,3 +48,11 @@ Speed = Game Speed (0: Slower, 1: Slow, 2: Normal, 3: Fast, 4: faster)
 ```void AddParameterFromInitFile(char*, char*, char*)```
 
 -Add Strings To 'param2' ('param1' is 'data.ini' directory, 'param3' is map path)
+
+### Naming Rule
+
+Local Variable - lv_#Name#
+
+Global Variable - gv_#Name#
+
+Parameter - lp_#Name#
