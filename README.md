@@ -43,7 +43,7 @@ Speed = Game Speed (0: Slower, 1: Slow, 2: Normal, 3: Fast, 4: faster)
 
 ```int CheckSC264Bit(char*)```
 
--Search Support Folder (From StarCraft II Path) {Support64: 64-Bit, Support: 32-Bit}
+-Check Support Folder (From StarCraft II Path) {Support64: 64-Bit, Support: 32-Bit}
 
 ```void AddParameterFromInitFile(char*, char*, char*)```
 
