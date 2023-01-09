@@ -2,7 +2,7 @@
 StarCraft II Map File Direct Executor
 
 
-###data.ini
+### data.ini
 
 DefaultMap = Local file to run (with no argument values)
 
@@ -27,7 +27,7 @@ Difficulty = Game Difficulty (1: Very Easy, 2: Easy, 3: Medium, 4: Hard, 5: Hard
 
 Speed = Game Speed (0: Slower, 1: Slow, 2: Normal, 3: Fast, 4: faster)
 
-###Functions
+### Functions
 
 ```char* rstrstr(char*, const char*)```
 
