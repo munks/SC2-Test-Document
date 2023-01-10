@@ -50,12 +50,11 @@ char* FindSC2Path (char* lp_pathString) {
 	return NULL;
 }
 
-//Return Base#Ver# String, Must Be Free After Use
-char* FindRecentSC2Version (char* lp_versionPath) {
+//Return Base#Ver# String
+char* FindRecentSC2Version (char* lp_versionPath, char* lp_output) {
 	struct _finddata_t lv_fd;
 	intptr_t lv_handle;
 	char lv_tempPath[260];
-	char* lv_returnPoint;
 	int lv_tempVersion = 0;
 	int lv_returnVersion = 0;
 	
@@ -76,9 +75,8 @@ char* FindRecentSC2Version (char* lp_versionPath) {
 	}
 	_findclose(lv_handle);
 	if (lv_returnVersion) {
-		lv_returnPoint = (char*)malloc(sizeof(char)*12);
-		sprintf(lv_returnPoint, "Base%d", lv_returnVersion);
-		return lv_returnPoint;
+		sprintf(lp_output, "Base%d", lv_returnVersion);
+		return lp_output;
 	} else {
 		return NULL;
 	}
@@ -337,10 +335,9 @@ int main (int argc, char* argv[]) {
 	}
 
 	//Find Recent Version Folder
-	char* lv_version = FindRecentSC2Version(lv_sc2Folder);
-	if (!lv_version) {
+	char lv_version[12];
+	if (!FindRecentSC2Version(lv_sc2Folder, lv_version)) {
 		printf("Could Not Found Installed Version.\n");
-		free(lv_version);
 		free(lv_sc2Folder);
 		goto End;
 	} else {
@@ -369,7 +366,6 @@ int main (int argc, char* argv[]) {
 		case 0: {
 			puts("Could Not Find Correct Support Folder.");
 			free(lv_parameterString);
-			free(lv_version);
 			free(lv_sc2Folder);
 			goto End;
 		}
@@ -390,7 +386,6 @@ int main (int argc, char* argv[]) {
 	
 	//Free Memory
 	free(lv_parameterString);
-	free(lv_version);
 	free(lv_sc2Folder);
 
 	End:

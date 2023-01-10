@@ -37,7 +37,7 @@ Speed = Game Speed (0: Slower, 1: Slow, 2: Normal, 3: Fast, 4: faster)
 
 -Search StarCraft II Directory From String (From product.db)
 
-```char* FindRecentSC2Version(char*) //return pointer must be free after use```
+```char* FindRecentSC2Version(char*, char*)```
 
 -Search Recent Version of StarCraft II (From StarCraft II Path)
 
