@@ -54,7 +54,7 @@ char* FindSC2Path (char* lp_pathString) {
 char* FindRecentSC2Version (char* lp_versionPath, char* lp_output) {
 	struct _finddata_t lv_fd;
 	intptr_t lv_handle;
-	char lv_tempPath[260];
+	char lv_tempPath[MAX_PATH];
 	int lv_tempVersion = 0;
 	int lv_returnVersion = 0;
 	
@@ -85,7 +85,7 @@ char* FindRecentSC2Version (char* lp_versionPath, char* lp_output) {
 int CheckSC264Bit (char* lp_initPath, char* lp_pathString) {
 	struct _finddata_t lv_fd;
 	intptr_t lv_handle;
-	char lv_tempPath[260];
+	char lv_tempPath[MAX_PATH];
 	int lv_forced32;
 	
 	lv_forced32 = GetPrivateProfileInt("option", "Forced32", 0, lp_initPath);
@@ -117,7 +117,6 @@ int CheckSC264Bit (char* lp_initPath, char* lp_pathString) {
 }
 
 void AddParameterFromInitFile (char* lp_initPath, char* lp_parameter, char* lp_targetMap) {
-	char lv_tempString[260];
 	int lv_tempInt;
 	int lv_windowSwitch = 0;
 	int lv_debugSwitch = 0;
@@ -127,7 +126,7 @@ void AddParameterFromInitFile (char* lp_initPath, char* lp_parameter, char* lp_t
 	
 	//Execution Map
 	if (strlen(lp_targetMap) == 0) {
-		GetPrivateProfileString("config", "DefaultMap", "Test\\EditorTest.SC2Map", lp_targetMap, 260, lp_initPath);
+		GetPrivateProfileString("config", "DefaultMap", "Test\\EditorTest.SC2Map", lp_targetMap, MAX_PATH, lp_initPath);
 	}
 	printf(" >Execution Map: \"%s\"\n", lp_targetMap);
 	sprintf(lp_parameter, "%s -run \"%s\"", lp_parameter, lp_targetMap);
@@ -281,10 +280,10 @@ void AddParameterFromInitFile (char* lp_initPath, char* lp_parameter, char* lp_t
 }
 
 int main (int argc, char* argv[]) {
-	char lv_targetMap[260] = {0, };
+	char lv_targetMap[MAX_PATH] = {0, };
 
 	//Set Init Path
-	char* lv_initPath = (char*)malloc(sizeof(char)*(strlen(argv[0])+20));
+	char lv_initPath[MAX_PATH];
 	strcpy(lv_initPath, argv[0]);
 	*(rstrstr(&lv_initPath[strlen(lv_initPath)-1], "\\")+1) = '\0';
 	strcat(lv_initPath, "\\data.ini");
@@ -304,7 +303,7 @@ int main (int argc, char* argv[]) {
 	puts("");
 	
 	//Set Battle Net Data Directory
-	char lv_productFile[60];
+	char lv_productFile[MAX_PATH];
 	strcpy(lv_productFile, getenv("SystemDrive"));
 	strcat(lv_productFile, "\\ProgramData\\Battle.net\\Agent\\product.db");
 	
@@ -331,14 +330,16 @@ int main (int argc, char* argv[]) {
 			lv_checkString[lv_arr] = '\20';
 		}
 	}
+	fclose(lv_pathCheck);
 	
 	//Find Path
-	char* lv_sc2Folder = (char*)malloc(sizeof(char)*(strlen(FindSC2Path(lv_checkString))+40));
+	char lv_sc2Folder[MAX_PATH];
+	
 	strcpy(lv_sc2Folder, FindSC2Path(lv_checkString));
 	free(lv_checkString);
+	
 	if (!lv_sc2Folder) {
 		puts("Could Not Found StarCraft II Installed Folder.");
-		free(lv_sc2Folder);
 		goto End;
 	} else {
 		printf("Found StarCraft II Installed Folder: \"%s\"\n", lv_sc2Folder);
@@ -348,7 +349,6 @@ int main (int argc, char* argv[]) {
 	char lv_version[12];
 	if (!FindRecentSC2Version(lv_sc2Folder, lv_version)) {
 		printf("Could Not Found Installed Version.\n");
-		free(lv_sc2Folder);
 		goto End;
 	} else {
 		printf("Found Installed Version: %s\n", lv_version);
@@ -358,7 +358,7 @@ int main (int argc, char* argv[]) {
 	
 	char* lv_parameterString = (char*)malloc(sizeof(char)*500);
 	char lv_addtionalString[10];
-	char lv_executeFile[260];
+	char lv_executeFile[MAX_PATH];
 	
 	switch (CheckSC264Bit(lv_initPath, lv_sc2Folder)) {
 		case 2: {
@@ -376,7 +376,6 @@ int main (int argc, char* argv[]) {
 		case 0: {
 			puts("Could Not Find Correct Support Folder.");
 			free(lv_parameterString);
-			free(lv_sc2Folder);
 			goto End;
 		}
 	}	
@@ -393,7 +392,6 @@ int main (int argc, char* argv[]) {
 	
 	//Free Memory
 	free(lv_parameterString);
-	free(lv_sc2Folder);
 
 	End:
 	puts("");
