@@ -82,18 +82,23 @@ char* FindRecentSC2Version (char* lp_versionPath, char* lp_output) {
 	}
 }
 //Check Program Processer/0: Could Not Found /1: x86 /2: x64
-int CheckSC264Bit (char* lp_pathString) {
+int CheckSC264Bit (char* lp_initPath, char* lp_pathString) {
 	struct _finddata_t lv_fd;
 	intptr_t lv_handle;
 	char lv_tempPath[260];
+	int lv_forced32;
 	
-	strcpy(lv_tempPath, lp_pathString);
-	strcat(lv_tempPath, "/Support64");
-	lv_handle = _findfirst(lv_tempPath, &lv_fd);
-	if (lv_fd.attrib & _A_SUBDIR ) {
-		_findclose(lv_handle);
-		puts("64-Bit Program Recognized.");
-		return 2;
+	lv_forced32 = GetPrivateProfileInt("option", "Forced32", 0, lp_initPath);
+	printf("Run StarCraft II In 32-Bit: %s\n", lv_forced32 ? "On" : "Off");
+	if (!lv_forced32) {
+		strcpy(lv_tempPath, lp_pathString);
+		strcat(lv_tempPath, "/Support64");
+		lv_handle = _findfirst(lv_tempPath, &lv_fd);
+		if (lv_fd.attrib & _A_SUBDIR ) {
+			_findclose(lv_handle);
+			puts("64-Bit Program Recognized.");
+			return 2;
+		}
 	}
 	
 	strcpy(lv_tempPath, lp_pathString);
@@ -111,25 +116,24 @@ int CheckSC264Bit (char* lp_pathString) {
 	return 0;
 }
 
-void AddParameterFromInitFile (char* lp_exePath, char* lp_parameter, char* lp_targetMap) {
+void AddParameterFromInitFile (char* lp_initPath, char* lp_parameter, char* lp_targetMap) {
 	char lv_tempString[260];
 	int lv_tempInt;
 	int lv_windowSwitch = 0;
 	int lv_debugSwitch = 0;
 	int lv_seedSwitch = 0;
 	
-	strcat(lp_exePath, "\\data.ini");
 	puts("Parameter List:");
 	
 	//Execution Map
 	if (strlen(lp_targetMap) == 0) {
-		GetPrivateProfileString("config", "DefaultMap", "Test\\EditorTest.SC2Map", lp_targetMap, 260, lp_exePath);
+		GetPrivateProfileString("config", "DefaultMap", "Test\\EditorTest.SC2Map", lp_targetMap, 260, lp_initPath);
 	}
 	printf(" >Execution Map: \"%s\"\n", lp_targetMap);
 	sprintf(lp_parameter, "%s -run \"%s\"", lp_parameter, lp_targetMap);
 	
 	//Display Mode
-	lv_windowSwitch = GetPrivateProfileInt("config", "DisplayMode", 0, lp_exePath);
+	lv_windowSwitch = GetPrivateProfileInt("config", "DisplayMode", 0, lp_initPath);
 	if (lv_windowSwitch < 0 || lv_windowSwitch > 2) {
 		lv_windowSwitch = 0;
 	}
@@ -151,7 +155,7 @@ void AddParameterFromInitFile (char* lp_exePath, char* lp_parameter, char* lp_ta
 	sprintf(lp_parameter, "%s -displaymode %d", lp_parameter, lv_windowSwitch);
 	
 	//Show Trigger Debug
-	lv_debugSwitch = GetPrivateProfileInt("config", "TriggerDebug", 0, lp_exePath);
+	lv_debugSwitch = GetPrivateProfileInt("config", "TriggerDebug", 0, lp_initPath);
 	if (lv_debugSwitch) {
 		printf(" >Show Trigger Debug Window - On");
 		if (!lv_windowSwitch) {
@@ -166,7 +170,7 @@ void AddParameterFromInitFile (char* lp_exePath, char* lp_parameter, char* lp_ta
 	}
 	
 	//Break On Trigger Error
-	lv_tempInt = GetPrivateProfileInt("config", "BreakOnError", 0, lp_exePath);
+	lv_tempInt = GetPrivateProfileInt("config", "BreakOnError", 0, lp_initPath);
 	printf("  *Break On Trigger Error - %s", lv_tempInt ? "On" : "Off");
 	if (lv_debugSwitch && lv_tempInt) {
 		puts("");
@@ -178,7 +182,7 @@ void AddParameterFromInitFile (char* lp_exePath, char* lp_parameter, char* lp_ta
 	}
 	
 	//Break On Trigger Debug Window Open
-	lv_tempInt = GetPrivateProfileInt("config", "BreakOnOpen", 0, lp_exePath);
+	lv_tempInt = GetPrivateProfileInt("config", "BreakOnOpen", 0, lp_initPath);
 	printf("  *Break On Trigger Debug Window Open - %s", lv_tempInt ? "On" : "Off");
 	if (lv_debugSwitch && lv_tempInt) {
 		puts("");
@@ -190,7 +194,7 @@ void AddParameterFromInitFile (char* lp_exePath, char* lp_parameter, char* lp_ta
 	}
 	
 	//Enable Preloading
-	lv_tempInt = GetPrivateProfileInt("config", "Preload", 0, lp_exePath);
+	lv_tempInt = GetPrivateProfileInt("config", "Preload", 0, lp_initPath);
 	printf(" >Enable Preloading - %s\n", lv_tempInt ? "On" : "Off");
 	sprintf(lp_parameter, "%s -preload %d", lp_parameter, lv_tempInt ? 1 : 0);
 	
@@ -198,14 +202,14 @@ void AddParameterFromInitFile (char* lp_exePath, char* lp_parameter, char* lp_ta
 	strcat(lp_parameter, " -NoUserCheats -reloadcheck");
 	
 	//Use Fixed Random Seed
-	lv_seedSwitch = GetPrivateProfileInt("config", "RandomSeed", 0, lp_exePath);
+	lv_seedSwitch = GetPrivateProfileInt("config", "RandomSeed", 0, lp_initPath);
 	printf(" >Use Fixed Random Seed - %s\n", lv_seedSwitch ? "On" : "Off");
 	if (lv_seedSwitch) {
 		strcat(lp_parameter, " -fixedseed");
 	}
 	
 	//Seed Value
-	lv_tempInt = GetPrivateProfileInt("config", "SeedValue", 0, lp_exePath);
+	lv_tempInt = GetPrivateProfileInt("config", "SeedValue", 0, lp_initPath);
 	printf("  *Seed Value: %d", lv_tempInt);
 	if (lv_seedSwitch) {
 		puts("");
@@ -215,7 +219,7 @@ void AddParameterFromInitFile (char* lp_exePath, char* lp_parameter, char* lp_ta
 	}
 	
 	//Melee Expansion
-	lv_tempInt = GetPrivateProfileInt("config", "Melee", 0, lp_exePath);
+	lv_tempInt = GetPrivateProfileInt("config", "Melee", 0, lp_initPath);
 	if (lv_tempInt < 0 || lv_tempInt > 3) {
 		lv_tempInt = 0;
 	}
@@ -241,7 +245,7 @@ void AddParameterFromInitFile (char* lp_exePath, char* lp_parameter, char* lp_ta
 	}
 	
 	//Game Difficulty
-	lv_tempInt = GetPrivateProfileInt("config", "Difficulty", 1, lp_exePath);
+	lv_tempInt = GetPrivateProfileInt("config", "Difficulty", 1, lp_initPath);
 	if (lv_tempInt < 1 || lv_tempInt > 10) {
 		lv_tempInt = 1;
 	}
@@ -261,7 +265,7 @@ void AddParameterFromInitFile (char* lp_exePath, char* lp_parameter, char* lp_ta
 	}
 	
 	//Game Speed
-	lv_tempInt = GetPrivateProfileInt("config", "Speed", 0, lp_exePath);
+	lv_tempInt = GetPrivateProfileInt("config", "Speed", 0, lp_initPath);
 	if (lv_tempInt < 0 || lv_tempInt > 4) {
 		lv_tempInt = 0;
 	}
@@ -278,6 +282,12 @@ void AddParameterFromInitFile (char* lp_exePath, char* lp_parameter, char* lp_ta
 
 int main (int argc, char* argv[]) {
 	char lv_targetMap[260] = {0, };
+
+	//Set Init Path
+	char* lv_initPath = (char*)malloc(sizeof(char)*(strlen(argv[0])+20));
+	strcpy(lv_initPath, argv[0]);
+	*(rstrstr(&lv_initPath[strlen(lv_initPath)-1], "\\")+1) = '\0';
+	strcat(lv_initPath, "\\data.ini");
 	
 	//Drop File Check
 	if (argc > 1) {
@@ -350,7 +360,7 @@ int main (int argc, char* argv[]) {
 	char lv_addtionalString[10];
 	char lv_executeFile[260];
 	
-	switch (CheckSC264Bit(lv_sc2Folder)) {
+	switch (CheckSC264Bit(lv_initPath, lv_sc2Folder)) {
 		case 2: {
 			puts("Run StarCraft II (x64)");
 			strcpy(lv_addtionalString, "_x64.exe");
@@ -374,12 +384,9 @@ int main (int argc, char* argv[]) {
 	puts("");
 	//Parameter: Version
 	sprintf(lv_parameterString, "\"%s/Versions/%s/SC2%s\"", lv_sc2Folder, lv_version, lv_addtionalString);
-	
-	//Use Origin Directory
-	*(rstrstr(&argv[0][strlen(argv[0])-1], "\\")+1) = '\0';
 
 	//Parameter: Document Test
-	AddParameterFromInitFile(argv[0], lv_parameterString, lv_targetMap);
+	AddParameterFromInitFile(lv_initPath, lv_parameterString, lv_targetMap);
 	
 	//Execute StarCraft II
 	ShellExecute(NULL, "open", lv_executeFile, lv_parameterString, NULL, SW_SHOW);

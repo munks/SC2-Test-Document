@@ -2,7 +2,9 @@
 StarCraft II Map File Direct Executor
 
 
-### data.ini
+## data.ini
+
+### [config]
 
 DefaultMap = Local file to run (with no argument values)
 
@@ -27,7 +29,11 @@ Difficulty = Game Difficulty (1: Very Easy, 2: Easy, 3: Medium, 4: Hard, 5: Hard
 
 Speed = Game Speed (0: Slower, 1: Slow, 2: Normal, 3: Fast, 4: faster)
 
-### Functions
+### [option]
+
+Forced32 = Run StarCraft II in 32-bit (0: Off, 1: On)
+
+## Functions
 
 ```char* rstrstr(char*, const char*)```
 
@@ -41,7 +47,7 @@ Speed = Game Speed (0: Slower, 1: Slow, 2: Normal, 3: Fast, 4: faster)
 
 -Search Recent Version of StarCraft II (From StarCraft II Path)
 
-```int CheckSC264Bit(char*)```
+```int CheckSC264Bit(char*, char*)```
 
 -Check Support Folder (From StarCraft II Path) {Support64: 64-Bit, Support: 32-Bit}
 
@@ -49,7 +55,7 @@ Speed = Game Speed (0: Slower, 1: Slow, 2: Normal, 3: Fast, 4: faster)
 
 -Add Strings To 'param2' ('param1' is 'data.ini' directory, 'param3' is map path)
 
-### Naming Rule
+## Naming Rule
 
 Local Variable - lv_#Name#
 
@@ -57,7 +63,7 @@ Global Variable - gv_#Name#
 
 Parameter - lp_#Name#
 
-### Sequence
+## Sequence
 
 1. Find 'product.db' file from '%SystemDrive%\ProgramData\Battle.net\Agent'
 2. Save file string to variable
