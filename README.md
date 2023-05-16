@@ -33,6 +33,8 @@ Speed = Game Speed (0: Slower, 1: Slow, 2: Normal, 3: Fast, 4: faster)
 
 Forced32 = Run StarCraft II in 32-bit (0: Off, 1: On)
 
+PauseOnEnd = Run "pause" Command On End (Prompt) (0: Off, 1: On)
+
 ## Functions
 
 ```char* rstrstr(char*, const char*)```

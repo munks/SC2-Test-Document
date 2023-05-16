@@ -125,10 +125,12 @@ void AddParameterFromInitFile (char* lp_initPath, char* lp_parameter, char* lp_t
 	puts("Parameter List:");
 	
 	//Execution Map
+	printf(" >Execution Map: \"%s\"", lp_targetMap);
 	if (strlen(lp_targetMap) == 0) {
 		GetPrivateProfileString("config", "DefaultMap", "Test\\EditorTest.SC2Map", lp_targetMap, MAX_PATH, lp_initPath);
+	} else {
+		puts(" (Ignored)");
 	}
-	printf(" >Execution Map: \"%s\"\n", lp_targetMap);
 	sprintf(lp_parameter, "%s -run \"%s\"", lp_parameter, lp_targetMap);
 	
 	//Display Mode
@@ -314,6 +316,7 @@ int main (int argc, char* argv[]) {
 		puts("Could Not Find Battle.Net Install Data");
 		goto End;
 	}
+	
 	//Get File Size
 	fseek(lv_pathCheck, 0, SEEK_END);
 	int lv_count = ftell(lv_pathCheck);
@@ -356,7 +359,6 @@ int main (int argc, char* argv[]) {
 	
 	puts("");
 	
-	char* lv_parameterString = (char*)malloc(sizeof(char)*500);
 	char lv_addtionalString[10];
 	char lv_executeFile[MAX_PATH];
 	
@@ -375,12 +377,15 @@ int main (int argc, char* argv[]) {
 		}
 		case 0: {
 			puts("Could Not Find Correct Support Folder.");
-			free(lv_parameterString);
 			goto End;
 		}
 	}	
 
 	puts("");
+	
+	//Allocate String Memory
+	char* lv_parameterString = (char*)malloc(sizeof(char)*500);
+	
 	//Parameter: Version
 	sprintf(lv_parameterString, "\"%s/Versions/%s/SC2%s\"", lv_sc2Folder, lv_version, lv_addtionalString);
 
@@ -395,6 +400,8 @@ int main (int argc, char* argv[]) {
 
 	End:
 	puts("");
-	system("pause");
+	if (GetPrivateProfileInt("option", "PauseOnEnd", 0, lv_initPath)) {
+		system("pause");
+	}
     return 0;
 }
