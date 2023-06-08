@@ -23,6 +23,8 @@ void ParameterSettings () {
 	cursorPos = 0;
 	cursorMax = 10;
 	
+	ClearStructure();
+	
 	enterFunc[0] = ParameterDisplay;
 	enterFunc[1] = ParameterTriggerDebug;
 	enterFunc[2] = ParameterBreakOnError;
@@ -48,6 +50,19 @@ void ParameterSettings () {
 	puts(" *Create Setting");
 	
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), {0, 0});
+}
+
+void ClearStructure () {
+	params.display = 0;
+	params.triggerDbg = false;
+	params.breakOnError = false;
+	params.breakOnWindow = false;
+	params.preload = false;
+	params.fixedSeed = false;
+	params.seedVal = 0;
+	params.melee = 1;
+	params.difficulty = 1;
+	params.speed = 0;
 }
 
 void CreateSetting () {

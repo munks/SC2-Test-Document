@@ -47,6 +47,7 @@ int main ();
 //common.cpp
 void Init ();
 void ParameterSettings ();
+void ClearStructure ();
 void CreateSetting ();
 void RemoveList ();
 void RemoveSetting ();
