@@ -4,13 +4,15 @@ void Init () {
 	system("cls");
 	
 	cursorPos = 0;
-	cursorMax = 1;
+	cursorMax = 2;
 	
 	enterFunc[0] = ParameterSettings;
 	enterFunc[1] = RemoveList;
+	enterFunc[2] = Close;
 	
 	puts(">Add Setting");
 	puts(" Remove Setting");
+	puts(" Close");
 	
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), {0, 0});
 }
@@ -75,6 +77,8 @@ void CreateSetting () {
 	RegSetKeyValue(file, name, NULL, REG_SZ, lparam, 260);
 	RegSetKeyValue(directory, name, NULL, REG_SZ, lparam, 260);
 	
+	free(lparam);
+	
 	Init();
 }
 
@@ -87,11 +91,12 @@ void RemoveList () {
 	cursorPos = 0;
 	
 	while (RegEnumKey(file, idx, name, 260) != ERROR_NO_MORE_ITEMS && idx < 30) {
-		if (idx) {
-			printf(" %s\n", name);
+		printf("%c", idx ? ' ' : '>');
+		if (strcmp(name, "open") != 0) {
+			printf("%s\n", name);
 			enterFunc[idx] = RemoveSetting;
 		} else {
-			puts(">Close");
+			puts("Close");
 			enterFunc[idx] = Init;
 		}
 		idx++;
@@ -112,4 +117,10 @@ void RemoveSetting () {
 	}
 	
 	Init();
+}
+
+void Close () {
+	RegCloseKey(file);
+	RegCloseKey(directory);
+	exit(0);
 }

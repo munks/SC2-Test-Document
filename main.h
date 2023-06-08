@@ -50,6 +50,7 @@ void ParameterSettings ();
 void CreateSetting ();
 void RemoveList ();
 void RemoveSetting ();
+void Close ();
 
 //parameters.cpp
 void ParameterDisplay ();
