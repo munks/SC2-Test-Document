@@ -72,6 +72,8 @@ void CreateSetting () {
 	system("cls");
 	printf("Enter the name: "); gets(name);
 	
+	if (!strlen(name)) { goto SettingEnd; }
+	
 	sprintf(lparam, "%s -run \"%%1\"", execute); //SC2Switcher
 	sprintf(lparam, "%s -displaymode %d", lparam, params.display); //Display Mode
 	sprintf(lparam, "%s%s", lparam, params.triggerDbg ? " -trigdebug" : ""); //Show Trigger Debug
@@ -95,8 +97,8 @@ void CreateSetting () {
 	RegSetKeyValue(fileMod, name, NULL, REG_SZ, lparam, 260);
 	RegSetKeyValue(directory, name, NULL, REG_SZ, lparam, 260);
 	
+	SettingEnd:
 	free(lparam);
-	
 	Init();
 }
 
