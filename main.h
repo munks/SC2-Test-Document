@@ -29,7 +29,8 @@ extern short cursorMax;
 extern WINDOW enterFunc[30];
 extern SC2PARAM params;
 extern char icon[260];
-extern HKEY file;
+extern HKEY fileMap;
+extern HKEY fileMod;
 extern HKEY directory;
 extern char execute[260];
 

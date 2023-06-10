@@ -4,7 +4,8 @@ short cursorPos = 0;
 short cursorMax = 0;
 WINDOW enterFunc[30];
 SC2PARAM params;
-HKEY file;
+HKEY fileMap;
+HKEY fileMod;
 HKEY directory;
 char icon[260];
 char execute[260];
@@ -59,7 +60,8 @@ int main () {
 	RegGetValue(HKEY_CLASSES_ROOT, "SC2.Map\\DefaultIcon", NULL, RRF_RT_REG_SZ, NULL, icon, &iconCnt);
 	RegGetValue(HKEY_CLASSES_ROOT, "Blizzard.SC2Map\\DefaultIcon", NULL, RRF_RT_REG_SZ, NULL, execute, &executeCnt);
 	*strrchr(execute, ',') = '\0';
-	RegOpenKey(HKEY_CLASSES_ROOT, "Blizzard.SC2Map\\shell", &file);
+	RegOpenKey(HKEY_CLASSES_ROOT, "SC2.Map\\shell", &fileMap);
+	RegOpenKey(HKEY_CLASSES_ROOT, "SC2.Mod\\shell", &fileMod);
 	RegOpenKey(HKEY_CLASSES_ROOT, "Directory\\shell", &directory);
 	
 	Init();

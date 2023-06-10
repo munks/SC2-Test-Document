@@ -84,12 +84,15 @@ void CreateSetting () {
 	sprintf(lparam, "%s -difficulty %d", lparam, params.difficulty); //Game Difficulty
 	sprintf(lparam, "%s -speed %d", lparam, params.speed); //Game Speed
 	
-	RegSetKeyValue(file, name, NULL, REG_SZ, name, strlen(name));
-	RegSetKeyValue(file, name, "Icon", REG_SZ, icon, strlen(icon));
+	RegSetKeyValue(fileMap, name, NULL, REG_SZ, name, strlen(name));
+	RegSetKeyValue(fileMap, name, "Icon", REG_SZ, icon, strlen(icon));
+	RegSetKeyValue(fileMod, name, NULL, REG_SZ, name, strlen(name));
+	RegSetKeyValue(fileMod, name, "Icon", REG_SZ, icon, strlen(icon));
 	RegSetKeyValue(directory, name, NULL, REG_SZ, name, strlen(name));
 	RegSetKeyValue(directory, name, "Icon", REG_SZ, icon, strlen(icon));
 	strcat(name, "\\command");
-	RegSetKeyValue(file, name, NULL, REG_SZ, lparam, 260);
+	RegSetKeyValue(fileMap, name, NULL, REG_SZ, lparam, 260);
+	RegSetKeyValue(fileMod, name, NULL, REG_SZ, lparam, 260);
 	RegSetKeyValue(directory, name, NULL, REG_SZ, lparam, 260);
 	
 	free(lparam);
@@ -105,7 +108,7 @@ void RemoveList () {
 	
 	cursorPos = 0;
 	
-	while (RegEnumKey(file, idx, name, 260) != ERROR_NO_MORE_ITEMS && idx < 30) {
+	while (RegEnumKey(fileMap, idx, name, 260) != ERROR_NO_MORE_ITEMS && idx < 30) {
 		printf("%c", idx ? ' ' : '>');
 		if (strcmp(name, "open") != 0) {
 			printf("%s\n", name);
@@ -124,10 +127,12 @@ void RemoveList () {
 void RemoveSetting () {
 	char name[260];
 	
-	if (RegEnumKey(file, cursorPos, name, 260) != ERROR_NO_MORE_ITEMS) {
-		RegDeleteTree(file, name);
+	if (RegEnumKey(fileMap, cursorPos, name, 260) != ERROR_NO_MORE_ITEMS) {
+		RegDeleteTree(fileMap, name);
+		RegDeleteTree(fileMod, name);
 		RegDeleteTree(directory, name);
-		RegDeleteKey(file, name);
+		RegDeleteKey(fileMap, name);
+		RegDeleteKey(fileMod, name);
 		RegDeleteKey(directory, name);
 	}
 	
@@ -135,7 +140,8 @@ void RemoveSetting () {
 }
 
 void Close () {
-	RegCloseKey(file);
+	RegCloseKey(fileMap);
+	RegCloseKey(fileMod);
 	RegCloseKey(directory);
 	exit(0);
 }
